@@ -179,11 +179,17 @@ python tools/train_net.py \
 1. [UniFormerV2: Spatiotemporal Learning by Arming Image ViTs with Video UniFormer](https://arxiv.org/abs/2211.09552)
 2. [RWF-2000: An Open Large Scale Video Database for Violence Detection](https://arxiv.org/abs/1911.05913)
 
-## 👨‍💻 Tác giả
+## 👨‍💻 Tác giả 1
 
 - **Họ tên**: Đào Mạnh Dũng
 - **MSSV**: 23520325
 - **Email**: 23520325@gm.uit.edu.vn
+
+## 👨‍💻 Tác giả 2
+
+- **Họ tên**: Mai Xuân Tuấn
+- **MSSV**: 23521714
+- **Email**: 23521714@gm.uit.edu.vn
 
 ## 📄 License
 
