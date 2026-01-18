@@ -112,13 +112,6 @@ python evaluate_validation.py
 python visualize_meaningful_v2.py --video path/to/video.avi
 ```
 
-## 📊 Kết quả
-
-| Model | Dataset | Accuracy | F1-Score |
-|-------|---------|----------|----------|
-| CUE-Net | RWF-2000 | **89.50%** | **89.48%** |
-| FlowGate Network | RWF-2000 | 85.25% | 85.20% |
-
 ## 🔧 Training
 
 Để huấn luyện mô hình từ đầu (yêu cầu GPU 48GB+):
@@ -144,14 +137,13 @@ python tools/train_net.py \
 ## 📚 Tài liệu tham khảo
 
 1. [UniFormerV2: Spatiotemporal Learning by Arming Image ViTs with Video UniFormer](https://arxiv.org/abs/2211.09552)
-2. [Learning to Recognize Actions on Objects in Egocentric Video with Attention Dictionaries](https://arxiv.org/abs/2102.06694)
-3. [RWF-2000: An Open Large Scale Video Database for Violence Detection](https://arxiv.org/abs/1911.05913)
+2. [RWF-2000: An Open Large Scale Video Database for Violence Detection](https://arxiv.org/abs/1911.05913)
 
 ## 👨‍💻 Tác giả
 
-- **Họ tên**: [Điền tên sinh viên]
-- **MSSV**: [Điền MSSV]
-- **Email**: [Điền email]
+- **Họ tên**: Đào Mạnh Dũng
+- **MSSV**: 23520325
+- **Email**: 23520325@gm.uit.edu.vn
 
 ## 📄 License
 
