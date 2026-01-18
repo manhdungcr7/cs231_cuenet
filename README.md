@@ -1,19 +1,24 @@
-# CUE-Net: Violence Detection in Surveillance Videos
+# Violence Detection in Surveillance Videos
 
 Đồ án môn học CS231 - Nhận dạng thị giác nâng cao
 
 ## 📋 Giới thiệu
 
-Đây là repository chứa mã nguồn triển khai mô hình **CUE-Net** (CLIP-based UniFormerV2 Enhanced Network) cho bài toán phát hiện bạo lực từ video giám sát, sử dụng bộ dữ liệu **RWF-2000**.
+Đây là repository chứa mã nguồn triển khai hai mô hình cho bài toán phát hiện bạo lực từ video giám sát, sử dụng bộ dữ liệu **RWF-2000**:
 
-## 🏗️ Kiến trúc mô hình
+1. **CUE-Net** (CLIP-based UniFormerV2 Enhanced Network) - Mô hình chính với độ chính xác cao
+2. **FlowGate Network** - Mô hình baseline sử dụng Optical Flow attention
+
+---
+
+## 🏗️ Kiến trúc CUE-Net
 
 CUE-Net được xây dựng dựa trên **UniFormerV2** với backbone **CLIP ViT-L/14-336**, kết hợp:
 - **Local UniBlocks**: Trích xuất đặc trưng không gian-thời gian cục bộ
 - **Global UniBlocks (MEAA)**: Multi-Head Efficient Additive Attention cho ngữ cảnh toàn cục
 - **CLIP Pre-training**: Tận dụng tri thức từ mô hình vision-language quy mô lớn
 
-### Thông số mô hình
+### Thông số CUE-Net
 | Thông số | Giá trị |
 |----------|---------|
 | Backbone | CLIP ViT-L/14-336 |
@@ -24,11 +29,30 @@ CUE-Net được xây dựng dựa trên **UniFormerV2** với backbone **CLIP V
 | Hidden dim | 1024 |
 | Attention heads | 16 |
 
+---
+
+## 🏗️ Kiến trúc FlowGate Network
+
+FlowGate Network sử dụng kiến trúc two-stream với cơ chế attention từ Optical Flow:
+- **RGB Branch**: Trích xuất đặc trưng không gian từ video gốc
+- **Optical Flow Branch**: Trích xuất đặc trưng chuyển động với Sigmoid attention
+- **Fusion**: Element-wise multiplication để kết hợp hai nhánh
+
+### Thông số FlowGate Network
+| Thông số | Giá trị |
+|----------|---------|
+| Input size | 224 × 224 × 64 frames |
+| Input channels | 5 (3 RGB + 2 Optical Flow) |
+| Num classes | 2 (Fight/NonFight) |
+| Total parameters | ~580K |
+| Conv3D Blocks | 4 blocks mỗi nhánh + 3 blocks merging |
+| Regularization | L2 (0.0005) |
+
 ## 📁 Cấu trúc thư mục
 
 ```
 cs231_cuenet/
-├── UniFormerV2/                    # Core model code
+├── UniFormerV2/                    # CUE-Net model code
 │   ├── slowfast/
 │   │   ├── config/                 # Configuration files
 │   │   ├── models/                 # Model architecture
@@ -44,20 +68,24 @@ cs231_cuenet/
 │       ├── train_net.py            # Training script
 │       └── test_net.py             # Testing script
 │
+├── model_flowgatenetwork/          # FlowGate Network
+│   ├── flowgate-train_v1.ipynb     # Training notebook v1
+│   ├── flowgate-train-v2.ipynb     # Training notebook v2
+│   ├── video2npy.ipynb             # Video preprocessing
+│   ├── compare_v1_v2.ipynb         # Compare versions
+│   ├── demo_flowgate_2.py          # Streamlit demo app
+│   ├── best_model_v1.h5            # Trained weights v1
+│   └── best_model_v2.h5            # Trained weights v2
+│
 ├── data_paths/                     # Dataset split files
 │   ├── train.csv
 │   ├── val.csv
 │   └── test.csv
 │
-├── models/                         # Trained checkpoints
-│   └── cuenet_rwf2000_epoch51.pyth
-│
 ├── api/                            # Inference API
 │   └── fight_detection_api.py
 │
-├── visualizations/                 # Output visualizations
-│
-├── inference_single_video.py       # Single video inference
+├── inference_single_video.py       # Single video inference (CUE-Net)
 ├── evaluate_validation.py          # Evaluation script
 ├── visualize_meaningful_v2.py      # Feature visualization (Eigen-CAM)
 ├── create_csv.py                   # Create dataset CSV files
@@ -68,10 +96,11 @@ cs231_cuenet/
 
 ### Yêu cầu hệ thống
 - Python 3.8+
-- PyTorch 2.0+ với CUDA support
-- GPU với ≥4GB VRAM (inference) hoặc ≥48GB VRAM (training)
+- PyTorch 2.0+ với CUDA support (cho CUE-Net)
+- TensorFlow 2.x (cho FlowGate Network)
+- GPU với ≥4GB VRAM (inference) hoặc ≥48GB VRAM (training CUE-Net)
 
-### Các bước cài đặt
+### Cài đặt CUE-Net
 
 ```bash
 # 1. Clone repository
@@ -90,6 +119,17 @@ cd ..
 
 # 4. Tải CLIP weights (ViT-L/14-336)
 # File: vit_l14_336.pth → đặt vào UniFormerV2/model_chkpts/
+```
+
+### Cài đặt FlowGate Network
+
+```bash
+# Cài đặt TensorFlow và dependencies
+pip install tensorflow opencv-python streamlit
+
+# Chạy demo Streamlit
+cd model_flowgatenetwork
+streamlit run demo_flowgate_2.py
 ```
 
 ## 🚀 Sử dụng
